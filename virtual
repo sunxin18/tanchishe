@@ -1,0 +1,45 @@
+#include <iostream> 
+using namespace std; 
+class A 
+{ 
+public: 
+    virtual void foo() 
+    { 
+        cout << "A's foo()" << endl; 
+        bar(); 
+    } 
+    virtual void bar() 
+    { 
+        cout << "A's bar()" << endl; 
+    } 
+}; 
+class B: public A 
+{ 
+public: 
+    void foo() 
+    { 
+        cout << "B's foo()" << endl; 
+        A::foo(); 
+    } 
+    void bar() 
+    { 
+        cout << "B's bar()" << endl; 
+    } 
+}; 
+int main() 
+{ 
+    B bobj; 
+    A *aptr = &bobj; 
+    aptr->foo(); 
+    A aobj = *aptr; //转化为A类对象
+    aobj.foo(); 
+}
+
+aptr->foo()输出结果是：
+   B's foo()//这个明白，多态性
+   A's foo()//这个也明白,执行A::foo();
+   B's bar()//虽然调用的是这个函数:A::foo(); 但隐式传入的还是bobj 的地址,所以再次调用bar();调用时还是会调用B的函数, 与虚函数指针有关
+
+aobj.foo()输出结果是：
+  A's foo() //这个不是指针,aobj完全是一个A的对象,与多态没有关系
+  A's bar() 
